@@ -1,0 +1,6 @@
+{
+  "name": "KMSK Anonymous",
+  "description": "Anonymous Lookup & OSINT Search tool, developed by Muhammad Sadiq Developer Pvt ltd.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
