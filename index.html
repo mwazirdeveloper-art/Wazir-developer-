@@ -1,13 +1,894 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete SIM & Phone Database Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 12px 30px;
+            background: rgba(255,255,255,0.3);
+            color: white;
+            border: 2px solid white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .nav-btn.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .nav-btn:hover {
+            background: white;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .search-section {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .search-section input {
+            padding: 12px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 25px;
+            width: 300px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            outline: none;
+        }
+
+        .search-section button {
+            padding: 12px 30px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        .search-section button:hover {
+            transform: translateY(-2px);
+        }
+
+        .add-btn {
+            padding: 12px 25px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-size: 1em;
+        }
+
+        .add-btn:hover {
+            background: #45a049;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .card-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-old {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .status-new {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .detail {
+            margin: 12px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #333;
+            font-size: 0.9em;
+        }
+
+        .detail-value {
+            color: #667eea;
+            font-size: 1.05em;
+            margin-top: 5px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+        }
+
+        .modal.active {
+            display: block;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-save {
+            flex: 1;
+            padding: 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-save:hover {
+            background: #45a049;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 12px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-cancel:hover {
+            background: #da190b;
+        }
+
+        .btn-delete {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .btn-delete:hover {
+            background: #da190b;
+        }
+
+        .no-results {
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            padding: 40px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.3);
+            color: white;
+            border: 2px solid white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .filter-btn.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .filter-btn:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .search-section input {
+                width: 100%;
+            }
+
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 20% auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📱 Complete Phone & SIM Database</h1>
+            <p>Manage SIM cards, phone numbers (Old & New) and owner information</p>
+        </header>
+
+        <div class="nav-tabs">
+            <button class="nav-btn active" onclick="switchTab('sim')">SIM Cards</button>
+            <button class="nav-btn" onclick="switchTab('new-phones')">New Phone Numbers</button>
+            <button class="nav-btn" onclick="switchTab('old-phones')">Old Phone Numbers</button>
+        </div>
+
+        <!-- SIM Cards Section -->
+        <div id="sim" class="content-section active">
+            <div class="stats" id="sim-stats"></div>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <button class="add-btn" onclick="openAddModal('sim')">+ Add New SIM</button>
+            </div>
+            <div class="search-section">
+                <input type="text" id="sim-search" placeholder="Search SIM by name, phone, or carrier...">
+                <button onclick="searchData('sim')">Search</button>
+            </div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="filterData('sim', 'all')">All</button>
+                <button class="filter-btn" onclick="filterData('sim', 'active')">Active</button>
+                <button class="filter-btn" onclick="filterData('sim', 'inactive')">Inactive</button>
+            </div>
+            <div class="dashboard" id="sim-dashboard"></div>
+        </div>
+
+        <!-- New Phone Numbers Section -->
+        <div id="new-phones" class="content-section">
+            <div class="stats" id="new-stats"></div>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <button class="add-btn" onclick="openAddModal('new')">+ Add New Phone Number</button>
+            </div>
+            <div class="search-section">
+                <input type="text" id="new-search" placeholder="Search by name or phone number...">
+                <button onclick="searchData('new')">Search</button>
+            </div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="filterData('new', 'all')">All</button>
+                <button class="filter-btn" onclick="filterData('new', 'active')">Active</button>
+                <button class="filter-btn" onclick="filterData('new', 'inactive')">Inactive</button>
+            </div>
+            <div class="dashboard" id="new-dashboard"></div>
+        </div>
+
+        <!-- Old Phone Numbers Section -->
+        <div id="old-phones" class="content-section">
+            <div class="stats" id="old-stats"></div>
+            <div style="text-align: center; margin-bottom: 20px;">
+                <button class="add-btn" onclick="openAddModal('old')">+ Add Old Phone Number</button>
+            </div>
+            <div class="search-section">
+                <input type="text" id="old-search" placeholder="Search by name or phone number...">
+                <button onclick="searchData('old')">Search</button>
+            </div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="filterData('old', 'all')">All</button>
+                <button class="filter-btn" onclick="filterData('old', 'active')">Active</button>
+                <button class="filter-btn" onclick="filterData('old', 'inactive')">Inactive</button>
+            </div>
+            <div class="dashboard" id="old-dashboard"></div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header" id="modal-title">Add New Entry</div>
+            <form id="entry-form">
+                <div class="form-group">
+                    <label>Owner Name</label>
+                    <input type="text" id="owner-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="phone-number" required>
+                </div>
+                <div class="form-group" id="carrier-group" style="display:none;">
+                    <label>Carrier</label>
+                    <select id="carrier">
+                        <option>Jazz</option>
+                        <option>Zong</option>
+                        <option>Telenor</option>
+                        <option>Warid</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="form-group" id="plan-group" style="display:none;">
+                    <label>Plan Type</label>
+                    <input type="text" id="plan">
+                </div>
+                <div class="form-group" id="balance-group" style="display:none;">
+                    <label>Current Balance</label>
+                    <input type="text" id="balance">
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="status">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Registration Date</label>
+                    <input type="date" id="reg-date" required>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="btn-save" onclick="saveEntry()">Save</button>
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Initialize data storage
+        let allData = {
+            sim: [
+                {
+                    id: 1,
+                    name: "Ahmed Khan",
+                    phone: "+92 300 1234567",
+                    carrier: "Jazz",
+                    status: "active",
+                    plan: "Premium Plus",
+                    balance: "Rs. 450",
+                    regDate: "2024-01-15"
+                },
+                {
+                    id: 2,
+                    name: "Fatima Ali",
+                    phone: "+92 321 9876543",
+                    carrier: "Zong",
+                    status: "active",
+                    plan: "Data Max",
+                    balance: "Rs. 1200",
+                    regDate: "2023-05-20"
+                },
+                {
+                    id: 3,
+                    name: "Muhammad Hassan",
+                    phone: "+92 333 5555555",
+                    carrier: "Telenor",
+                    status: "active",
+                    plan: "Silver",
+                    balance: "Rs. 0",
+                    regDate: "2024-03-10"
+                },
+                {
+                    id: 4,
+                    name: "Sara Khan",
+                    phone: "+92 345 4444444",
+                    carrier: "Warid",
+                    status: "inactive",
+                    plan: "Basic",
+                    balance: "Rs. 0",
+                    regDate: "2023-08-25"
+                }
+            ],
+            new: [
+                {
+                    id: 1,
+                    name: "Ali Raza",
+                    phone: "+92 312 3333333",
+                    status: "active",
+                    regDate: "2024-02-01"
+                },
+                {
+                    id: 2,
+                    name: "Ayesha Malik",
+                    phone: "+92 334 2222222",
+                    status: "active",
+                    regDate: "2024-06-15"
+                },
+                {
+                    id: 3,
+                    name: "Hassan Ali",
+                    phone: "+92 343 1111111",
+                    status: "active",
+                    regDate: "2024-07-20"
+                },
+                {
+                    id: 4,
+                    name: "Zara Khan",
+                    phone: "+92 305 9999999",
+                    status: "inactive",
+                    regDate: "2024-05-10"
+                }
+            ],
+            old: [
+                {
+                    id: 1,
+                    name: "Rashid Ahmed",
+                    phone: "+92 301 7777777",
+                    status: "inactive",
+                    regDate: "2020-03-15"
+                },
+                {
+                    id: 2,
+                    name: "Nida Khan",
+                    phone: "+92 322 6666666",
+                    status: "inactive",
+                    regDate: "2019-08-20"
+                },
+                {
+                    id: 3,
+                    name: "Imran Khan",
+                    phone: "+92 330 5555555",
+                    status: "inactive",
+                    regDate: "2021-02-14"
+                },
+                {
+                    id: 4,
+                    name: "Hina Abbas",
+                    phone: "+92 333 4444444",
+                    status: "inactive",
+                    regDate: "2018-11-05"
+                }
+            ]
+        };
+
+        let currentTab = 'sim';
+        let currentFilter = 'all';
+        let currentType = null;
+
+        // Load data from localStorage
+        function loadData() {
+            const saved = localStorage.getItem('phoneDatabase');
+            if (saved) {
+                allData = JSON.parse(saved);
+            }
+            renderAll();
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('phoneDatabase', JSON.stringify(allData));
+        }
+
+        // Switch tabs
+        function switchTab(tab) {
+            currentTab = tab;
+            currentFilter = 'all';
+            
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            renderAll();
+        }
+
+        // Render all data
+        function renderAll() {
+            renderDashboard('sim');
+            renderDashboard('new');
+            renderDashboard('old');
+            updateStats();
+        }
+
+        // Render dashboard
+        function renderDashboard(type) {
+            const data = allData[type].filter(item => 
+                currentTab === type && currentFilter === 'all' ? true : 
+                currentTab === type && item.status === currentFilter ? true : false
+            );
+
+            const dashboard = document.getElementById(`${type}-dashboard`);
+            
+            if (!dashboard) return;
+
+            if (data.length === 0) {
+                dashboard.innerHTML = '<div class="no-results">No records found</div>';
+                return;
+            }
+
+            dashboard.innerHTML = data.map(item => `
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">${item.name}</div>
+                        <span class="badge ${item.status === 'active' ? 'status-active' : 'status-inactive'}">
+                            ${item.status.toUpperCase()}
+                        </span>
+                    </div>
+                    <div class="detail">
+                        <div class="detail-label">Phone Number</div>
+                        <div class="detail-value">${item.phone}</div>
+                    </div>
+                    ${item.carrier ? `
+                    <div class="detail">
+                        <div class="detail-label">Carrier</div>
+                        <div class="detail-value">${item.carrier}</div>
+                    </div>
+                    ` : ''}
+                    ${item.plan ? `
+                    <div class="detail">
+                        <div class="detail-label">Plan</div>
+                        <div class="detail-value">${item.plan}</div>
+                    </div>
+                    ` : ''}
+                    ${item.balance ? `
+                    <div class="detail">
+                        <div class="detail-label">Balance</div>
+                        <div class="detail-value">${item.balance}</div>
+                    </div>
+                    ` : ''}
+                    <div class="detail">
+                        <div class="detail-label">Registration Date</div>
+                        <div class="detail-value">${item.regDate}</div>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <button class="btn-delete" onclick="deleteEntry('${type}', ${item.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update statistics
+        function updateStats() {
+            const types = ['sim', 'new', 'old'];
+            types.forEach(type => {
+                const total = allData[type].length;
+                const active = allData[type].filter(i => i.status === 'active').length;
+                const inactive = allData[type].filter(i => i.status === 'inactive').length;
+
+                const statsDiv = document.getElementById(`${type}-stats`);
+                if (statsDiv) {
+                    statsDiv.innerHTML = `
+                        <div class="stat-box">
+                            <div class="stat-number">${total}</div>
+                            <div class="stat-label">Total Records</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number">${active}</div>
+                            <div class="stat-label">Active</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number">${inactive}</div>
+                            <div class="stat-label">Inactive</div>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        // Search data
+        function searchData(type) {
+            const searchInput = document.getElementById(`${type}-search`).value.toLowerCase();
+            const data = allData[type];
+            
+            let filtered = data.filter(item => 
+                item.name.toLowerCase().includes(searchInput) ||
+                item.phone.includes(searchInput)
+            );
+
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(item => item.status === currentFilter);
+            }
+
+            const dashboard = document.getElementById(`${type}-dashboard`);
+            
+            if (filtered.length === 0) {
+                dashboard.innerHTML = '<div class="no-results">No records found</div>';
+                return;
+            }
+
+            dashboard.innerHTML = filtered.map(item => `
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">${item.name}</div>
+                        <span class="badge ${item.status === 'active' ? 'status-active' : 'status-inactive'}">
+                            ${item.status.toUpperCase()}
+                        </span>
+                    </div>
+                    <div class="detail">
+                        <div class="detail-label">Phone Number</div>
+                        <div class="detail-value">${item.phone}</div>
+                    </div>
+                    ${item.carrier ? `
+                    <div class="detail">
+                        <div class="detail-label">Carrier</div>
+                        <div class="detail-value">${item.carrier}</div>
+                    </div>
+                    ` : ''}
+                    ${item.plan ? `
+                    <div class="detail">
+                        <div class="detail-label">Plan</div>
+                        <div class="detail-value">${item.plan}</div>
+                    </div>
+                    ` : ''}
+                    ${item.balance ? `
+                    <div class="detail">
+                        <div class="detail-label">Balance</div>
+                        <div class="detail-value">${item.balance}</div>
+                    </div>
+                    ` : ''}
+                    <div class="detail">
+                        <div class="detail-label">Registration Date</div>
+                        <div class="detail-value">${item.regDate}</div>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <button class="btn-delete" onclick="deleteEntry('${type}', ${item.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter data
+        function filterData(type, status) {
+            currentFilter = status;
+            document.querySelectorAll(`#${type}-dashboard`).parent?.querySelectorAll('.filter-btn')?.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderDashboard(type);
+        }
+
+        // Open add modal
+        function openAddModal(type) {
+            currentType = type;
+            document.getElementById('modal-title').textContent = `Add New ${type === 'sim' ? 'SIM' : type === 'new' ? 'Phone Number' : 'Old Phone Number'}`;
+            
+            const carrierGroup = document.getElementById('carrier-group');
+            const planGroup = document.getElementById('plan-group');
+            const balanceGroup = document.getElementById('balance-group');
+            
+            if (type === 'sim') {
+                carrierGroup.style.display = 'block';
+                planGroup.style.display = 'block';
+                balanceGroup.style.display = 'block';
+            } else {
+                carrierGroup.style.display = 'none';
+                planGroup.style.display = 'none';
+                balanceGroup.style.display = 'none';
+            }
+
+            document.getElementById('entry-form').reset();
+            document.getElementById('modal').classList.add('active');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Save entry
+        function saveEntry() {
+            const name = document.getElementById('owner-name').value;
+            const phone = document.getElementById('phone-number').value;
+            const status = document.getElementById('status').value;
+            const regDate = document.getElementById('reg-date').value;
+
+            if (!name || !phone || !regDate) {
+                alert('Please fill all required fields');
+                return;
+            }
+
+            const newEntry = {
+                id: Date.now(),
+                name,
+                phone,
+                status,
+                regDate
+            };
+
+            if (currentType === 'sim') {
+                newEntry.carrier = document.getElementById('carrier').value;
+                newEntry.plan = document.getElementById('plan').value;
+                newEntry.balance = document.getElementById('balance').value;
+            }
+
+            allData[currentType].push(newEntry);
+            saveData();
+            renderAll();
+            closeModal();
+            alert('Entry added successfully!');
+        }
+
+        // Delete entry
+        function deleteEntry(type, id) {
+            if (confirm('Are you sure you want to delete this entry?')) {
+                allData[type] = allData[type].filter(item => item.id !== id);
+                saveData();
+                renderAll();
+            }
+        }
+
+        // Initial load
+        window.addEventListener('load', loadData);
+    </script>
+</body>
+</html>
