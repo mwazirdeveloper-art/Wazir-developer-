@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wazir Developer - App Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+            animation: slideDown 0.6s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        }
+
+        header .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        header .tagline {
+            font-size: 1em;
+            opacity: 0.8;
+        }
+
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .app-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .app-card:nth-child(1) { animation-delay: 0.1s; }
+        .app-card:nth-child(2) { animation-delay: 0.2s; }
+        .app-card:nth-child(3) { animation-delay: 0.3s; }
+        .app-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .app-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 25px;
+            color: white;
+            text-align: center;
+        }
+
+        .app-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .app-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .app-category {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .app-body {
+            padding: 25px;
+        }
+
+        .app-description {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .app-features {
+            margin-bottom: 20px;
+        }
+
+        .app-features h4 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+
+        .app-features ul {
+            list-style: none;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .app-features li {
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .app-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .app-footer {
+            padding: 0 25px 25px 25px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-launch {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s;
+            font-size: 1em;
+        }
+
+        .btn-launch:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-info {
+            flex: 1;
+            padding: 12px;
+            background: #f0f0f0;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s;
+            font-size: 1em;
+        }
+
+        .btn-info:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .stats {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 50px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            color: white;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        footer {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        footer h3 {
+            margin-bottom: 15px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .social-btn {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5em;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-btn:hover {
+            background: white;
+            color: #667eea;
+            transform: scale(1.1);
+        }
+
+        .features-section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .features-section h2 {
+            color: #667eea;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2em;
+        }
+
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-item {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
+        }
+
+        .feature-item:hover {
+            transform: translateX(10px);
+            background: #f0f0f0;
+        }
+
+        .feature-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .feature-title {
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .feature-desc {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            header .subtitle {
+                font-size: 1.1em;
+            }
+
+            .apps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .features-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Wazir Developer</h1>
+            <div class="subtitle">Application Hub</div>
+            <div class="tagline">Explore powerful web applications for productivity and organization</div>
+        </header>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">4</div>
+                <div class="stat-label">Applications</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Free & Open</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Available</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">Live</div>
+                <div class="stat-label">Right Now</div>
+            </div>
+        </div>
+
+        <div class="apps-grid">
+            <!-- Phone & SIM Database -->
+            <div class="app-card">
+                <div class="app-header">
+                    <div class="app-icon">📱</div>
+                    <div class="app-title">Phone & SIM Database</div>
+                    <div class="app-category">Contact Management</div>
+                </div>
+                <div class="app-body">
+                    <div class="app-description">
+                        Complete phone and SIM card owner information management system with separate tracking for new and old phone numbers.
+                    </div>
+                    <div class="app-features">
+                        <h4>Features:</h4>
+                        <ul>
+                            <li>SIM card management</li>
+                            <li>New phone numbers tracking</li>
+                            <li>Old phone numbers archive</li>
+                            <li>Search & filter</li>
+                            <li>Add/Delete entries</li>
+                            <li>Local data storage</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="app-footer">
+                    <a href="index.html" class="btn-launch">🚀 Launch App</a>
+                </div>
+            </div>
+
+            <!-- World Time Zone Clock -->
+            <div class="app-card">
+                <div class="app-header">
+                    <div class="app-icon">🌍</div>
+                    <div class="app-title">World Time Zone Clock</div>
+                    <div class="app-category">Time Management</div>
+                </div>
+                <div class="app-body">
+                    <div class="app-description">
+                        Real-time digital clock displaying current time across different time zones with 12/24 hour format toggle.
+                    </div>
+                    <div class="app-features">
+                        <h4>Features:</h4>
+                        <ul>
+                            <li>29+ timezones</li>
+                            <li>Analog clocks</li>
+                            <li>Digital display</li>
+                            <li>12/24 hour format</li>
+                            <li>Search & add timezones</li>
+                            <li>Real-time updates</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="app-footer">
+                    <a href="clock.html" class="btn-launch">🚀 Launch App</a>
+                </div>
+            </div>
+
+            <!-- To-Do List -->
+            <div class="app-card">
+                <div class="app-header">
+                    <div class="app-icon">✅</div>
+                    <div class="app-title">Advanced To-Do List</div>
+                    <div class="app-category">Task Management</div>
+                </div>
+                <div class="app-body">
+                    <div class="app-description">
+                        Powerful task management application with priority levels, due dates, and local storage for data persistence.
+                    </div>
+                    <div class="app-features">
+                        <h4>Features:</h4>
+                        <ul>
+                            <li>Priority levels (H/M/L)</li>
+                            <li>Due date tracking</li>
+                            <li>Overdue alerts</li>
+                            <li>Search & filter</li>
+                            <li>Edit/Delete tasks</li>
+                            <li>Export as JSON</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="app-footer">
+                    <a href="todo.html" class="btn-launch">🚀 Launch App</a>
+                </div>
+            </div>
+
+            <!-- Dashboard Overview (Coming Soon) -->
+            <div class="app-card">
+                <div class="app-header">
+                    <div class="app-icon">📊</div>
+                    <div class="app-title">Dashboard Hub</div>
+                    <div class="app-category">Analytics</div>
+                </div>
+                <div class="app-body">
+                    <div class="app-description">
+                        Central hub connecting all your applications with real-time statistics, usage analytics, and data overview.
+                    </div>
+                    <div class="app-features">
+                        <h4>Features:</h4>
+                        <ul>
+                            <li>Statistics overview</li>
+                            <li>Usage analytics</li>
+                            <li>Quick access</li>
+                            <li>Performance metrics</li>
+                            <li>Data synchronization</li>
+                            <li>Cloud sync ready</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="app-footer">
+                    <button class="btn-info" disabled style="opacity: 0.5; cursor: not-allowed;">🔄 Coming Soon</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="features-section">
+            <h2>Why Choose Our Apps?</h2>
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="feature-icon">🔒</div>
+                    <div class="feature-title">Privacy First</div>
+                    <div class="feature-desc">All data is stored locally in your browser. We never collect or share your information.</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">Lightning Fast</div>
+                    <div class="feature-desc">Built with modern web technologies for instant loading and seamless performance.</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-title">Fully Responsive</div>
+                    <div class="feature-desc">Works perfectly on desktop, tablet, and mobile devices with optimized UI.</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">💾</div>
+                    <div class="feature-title">Local Storage</div>
+                    <div class="feature-desc">Your data persists between sessions. Never lose your information again.</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-title">Beautiful Design</div>
+                    <div class="feature-desc">Modern, intuitive interfaces with smooth animations and beautiful gradients.</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🆓</div>
+                    <div class="feature-title">100% Free</div>
+                    <div class="feature-desc">No subscriptions, no ads, no hidden costs. Completely free forever.</div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <h3>About Wazir Developer</h3>
+            <p>Building innovative web applications to enhance productivity and simplify daily tasks.</p>
+            <p style="margin-top: 15px; opacity: 0.8;">
+                © 2024-2026 Wazir Developer. All applications are open-source and available on GitHub.
+            </p>
+            <div class="social-links">
+                <a href="https://github.com/mwazirdeveloper-art" class="social-btn" title="GitHub">
+                    <span>🐙</span>
+                </a>
+                <a href="#" class="social-btn" title="Twitter">
+                    <span>𝕏</span>
+                </a>
+                <a href="#" class="social-btn" title="Email">
+                    <span>✉️</span>
+                </a>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
